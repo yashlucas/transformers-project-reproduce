@@ -77,3 +77,43 @@ PyTorch       : 2.5.1+cu121
 Transformers  : 5.0.0.dev0
 
 Virtual Env   : .venv
+
+
+##  Results
+###  Model Size Comparison
+
+| Model | Parameters (Millions) |
+|------|------------------------|
+| ELMo (paper baseline) | 180 |
+| BERT-base | 108.31 |
+| DistilBERT | 65.78 |
+
+ **DistilBERT achieves a ~39% parameter reduction**, closely matching the paper’s reported 40%.
+
+### 🔹 Inference Speed (STS-B Full Pass)
+
+| Model | Time (seconds) | Hardware |
+|------|----------------|----------|
+| BERT-base | 13.04 | GPU |
+| DistilBERT | 6.61 | GPU |
+
+ **DistilBERT is ~1.97× faster than BERT-base**.
+
+While the paper reports ~60% speedup on CPU, GPU-based evaluation yields an even closer
+match to the theoretical **2× speedup** expected from halving the number of Transformer layers.
+
+###  GLUE Benchmark (Selected Results)
+
+| Task | Metric | BERT | DistilBERT |
+|------|--------|------|------------|
+| CoLA | Matthews Corr. | 0.573 | 0.436 |
+| MNLI | Accuracy | 0.844 | 0.822 |
+| MRPC | F1 | 0.869 | **0.875** |
+| QNLI | Accuracy | 0.919 | 0.880 |
+| SST-2 | Accuracy | 0.926 | 0.905 |
+
+**Observations**
+- DistilBERT consistently underperforms BERT slightly
+- Larger drops occur on syntax-sensitive tasks (e.g., CoLA)
+- Small datasets (e.g., MRPC) exhibit higher variance
+
