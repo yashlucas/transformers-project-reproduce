@@ -1,0 +1,15 @@
+{
+  "BERT-base": {
+    "params_millions": 108.31,
+    "gpu_stsb_full_pass_seconds": 13.0423
+  },
+  "DistilBERT": {
+    "params_millions": 65.78,
+    "gpu_stsb_full_pass_seconds": 6.611
+  },
+  "ELMo (paper baseline)": {
+    "params_millions": 180,
+    "inf_time_seconds": 895,
+    "note": "Paper Table 3 reports CPU timing on Xeon; ELMo baseline values copied from paper."
+  }
+}
