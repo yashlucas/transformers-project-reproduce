@@ -57,31 +57,10 @@ This repository evaluates whether these claims are **reproducible in practice**.
 
 ---
 
-## System Configuration
 
-All experiments were conducted on the following system:
+## 📊 Results
 
-```text
-OS            : Windows 10
-OS Version    : 10.0.26100
-Python        : 3.11.3
-CPU           : Intel64 Family 6 Model 186 Stepping 2, GenuineIntel
-Physical Cores: 14
-Logical Cores : 20
-
-GPU           : NVIDIA GeForce RTX 4050 Laptop GPU
-GPU Count     : 1
-CUDA Version  : 12.1
-
-PyTorch       : 2.5.1+cu121
-Transformers  : 5.0.0.dev0
-
-Virtual Env   : .venv
-
----
-
-##  Results
-###  Model Size Comparison
+### 🔹 Model Size Comparison
 
 | Model | Parameters (Millions) |
 |------|------------------------|
@@ -89,7 +68,9 @@ Virtual Env   : .venv
 | BERT-base | 108.31 |
 | DistilBERT | 65.78 |
 
- **DistilBERT achieves a ~39% parameter reduction**, closely matching the paper’s reported 40%.
+➡️ **DistilBERT achieves a ~39% parameter reduction**, closely matching the paper’s reported 40%.
+
+---
 
 ### 🔹 Inference Speed (STS-B Full Pass)
 
@@ -98,12 +79,15 @@ Virtual Env   : .venv
 | BERT-base | 13.04 | GPU |
 | DistilBERT | 6.61 | GPU |
 
- **DistilBERT is ~1.97× faster than BERT-base**.
+➡️ **DistilBERT is ~1.97× faster than BERT-base**.
 
 While the paper reports ~60% speedup on CPU, GPU-based evaluation yields an even closer
-match to the theoretical **2× speedup** expected from halving the number of Transformer layers.
+match to the theoretical **2× speedup** expected from halving the number of Transformer
+layers.
 
-###  GLUE Benchmark (Selected Results)
+---
+
+### 🔹 GLUE Benchmark (Selected Results)
 
 | Task | Metric | BERT | DistilBERT |
 |------|--------|------|------------|
@@ -116,5 +100,15 @@ match to the theoretical **2× speedup** expected from halving the number of Tra
 **Observations**
 - DistilBERT consistently underperforms BERT slightly
 - Larger drops occur on syntax-sensitive tasks (e.g., CoLA)
-- Small datasets (e.g., MRPC) exhibit higher variance
+- Smaller datasets (e.g., MRPC) exhibit higher variance
 
+---
+
+### 🔹 SQuAD v1.1 (BERT-base)
+
+| Metric | Reproduced | Paper |
+|--------|------------|-------|
+| Exact Match | 81.79 | 81.2 |
+| F1 | 88.87 | 88.5 |
+
+➡️ Near-exact reproduction of the paper’s reported BERT-base performance.
