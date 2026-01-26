@@ -78,6 +78,7 @@ Transformers  : 5.0.0.dev0
 
 Virtual Env   : .venv
 
+---
 
 ##  Results
 ###  Model Size Comparison
