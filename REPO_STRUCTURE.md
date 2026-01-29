@@ -1,150 +1,86 @@
-# Ablation Models and Experimental Details
+##  Repository Structure
 
-This directory contains all models and artifacts used for the **ablation experiments** conducted as an extension to the paper  
-**“DistilBERT: a distilled version of BERT”**.
+The repository is organized to clearly separate **baseline reproductions**, **custom ablation models**, and **supporting scripts/results**.
 
-The goal of these experiments is to perform a **lightweight, proxy ablation study** that qualitatively validates the trends reported in the original paper’s pre-training ablation (Table 4), under realistic computational constraints.
+├── README.md
+│ └── Main entry point for the project.
+│ Describes the paper, reproduced results, system configuration,
+│ and instructions to run baseline experiments.
+│
+├── REPO_STRUCTURE.md
+│ └── Provides a detailed explanation of the entire repository layout,
+│ including baseline models, ablation models, scripts, and usage guidance.
+│
+├── table3_gpu_results.json
+│ └── Stores reproduced parameter counts and inference-time results
+│ (GPU-based) used for comparison with paper-reported values.
+│
+├── Models for Ablation/
+│ └── Contains all custom student models trained specifically for
+│ ablation and distillation experiments in this project.
+│ These models are created here and are NOT standard
+│ Hugging Face pretrained checkpoints.
+│
+├── cola_bert/
+│ └── Baseline fine-tuned BERT-base model for the CoLA task
+│ using a pretrained Hugging Face checkpoint.
+│
+├── cola_distilbert/
+│ └── Baseline fine-tuned DistilBERT model for the CoLA task
+│ using a pretrained Hugging Face checkpoint.
+│
+├── mnli_bert/
+│ └── Baseline fine-tuned BERT-base model for MNLI.
+│
+├── mnli_distilbert/
+│ └── Baseline fine-tuned DistilBERT model for MNLI.
+│
+├── mrpc_bert/
+│ └── Baseline fine-tuned BERT-base model for MRPC.
+│
+├── imdb_bert/
+│ └── Baseline fine-tuned BERT-base model for IMDb sentiment classification.
+│
+├── imdb_distilbert/
+│ └── Baseline fine-tuned DistilBERT model for IMDb sentiment classification.
+│
+├── mini_distil_pretrain.py
+│ └── Implements lightweight distillation-based pre-training.
+│ Uses a frozen BERT-base teacher and trains a reduced-depth
+│ student model with configurable loss components
+│ (MLM, distillation/KL, cosine embedding loss).
+│ Outputs student models into Models for Ablation/.
+│
+├── ablation_study.py
+│ └── Runs multiple ablation configurations by enabling or disabling
+│ different loss components and initialization strategies.
+│ Used to study the qualitative impact of each component.
+│
+├── glue_tasks_all_abls.py
+│ └── Fine-tunes ablation-generated student models on GLUE tasks
+│ using a consistent evaluation setup for fair comparison.
 
----
-
-## 1. Overview of Ablation Strategy
-
-The original paper performs ablation during **large-scale pre-training distillation**, which requires extensive computational resources.
-
-In this project, we implement a **scaled-down proxy ablation** by:
-
-- Training a **6-layer BERT-style student model**
-- Using **knowledge distillation losses** during masked language modeling
-- Running short pre-training experiments on a small text corpus
-- Fine-tuning the resulting student models on downstream GLUE tasks
-
-This approach allows us to study the **relative importance of different loss components and initialization strategies**, without reproducing full pre-training from scratch.
-
----
-
-## 2. Models Used in Ablation
-
-
-### Student Model
-- **BERT-style Masked Language Model**
-- 6 Transformer encoder layers
-- Same hidden size, attention heads, and vocabulary as BERT-base
-- ~67M parameters
-- Initialized in two ways:
-  - From teacher weights (layer-wise copying)
-  - Random initialization (for ablation)
-
-> Note: The student uses a BERT architecture with reduced depth, acting as a DistilBERT-style proxy rather than the exact DistilBERT class.
-
----
-
-## 3. Pre-training Distillation Setup
-
-Pre-training is performed using a **triple-loss objective**, inspired by the original DistilBERT paper:
-
-- **MLM Loss**  
-  Standard masked language modeling loss on student outputs
-
-- **Distillation (KL) Loss**  
-  Kullback–Leibler divergence between student and teacher logits, with temperature scaling
-
-- **Cosine Embedding Loss**  
-  Alignment between student and teacher hidden representations
-
-Each ablation disables exactly one component or changes the initialization strategy.
-
----
-
-## 4. Ablation Variants Implemented
-
-The following ablation variants are implemented using `mini_distil_pretrain.py`:
-
-| Variant | MLM | CE (Distillation) | Cosine | Init |
-|------|----|----|----|----|
-| Full (baseline) | ✓ | ✓ | ✓ | Teacher |
-| No cosine loss | ✓ | ✓ | ✗ | Teacher |
-| No distillation loss | ✓ | ✗ | ✓ | Teacher |
-| No MLM loss | ✗ | ✓ | ✓ | Teacher |
-| Random initialization | ✓ | ✓ | ✓ | Random |
-
-Each variant produces a separate student checkpoint saved in this directory.
 
 ---
 
-## 5. Pre-training Script
+### How to Use This Repository
 
-### `mini_distil_pretrain.py`
+- **To reproduce the paper’s main results**  
+  Use the `*_bert/` and `*_distilbert/` directories, which rely on
+  pretrained Hugging Face models and standard fine-tuning.
 
-This script:
-- Loads the teacher model and tokenizer
-- Constructs a 6-layer student model
-- Optionally initializes student weights from the teacher
-- Applies configurable loss components
-- Trains for a limited number of steps on a small text corpus
-- Saves the resulting student model and tokenizer
-
-Key configurable arguments include:
-- `--use_mlm`, `--use_ce`, `--use_cos`
-- `--init {teacher,random}`
-- `--steps`, `--batch_size`, `--lr`
-
-This script enables systematic ablation without modifying the core training logic.
+- **To run ablation and distillation extensions**  
+  Use `mini_distil_pretrain.py`, followed by `ablation_study.py`
+  and `glue_tasks_all_abls.py`.  
+  Resulting student models are stored in `Models for Ablation/`.
 
 ---
 
-## 6. Downstream Fine-Tuning Experiments
+### Key Distinction
 
-After pre-training, student models are fine-tuned on downstream tasks using the Hugging Face `Trainer` API.
+- **Baseline models**: Pretrained Hugging Face checkpoints, fine-tuned only  
+- **Ablation models**: Custom student models trained in this project  
+- **Teacher model**: Loaded from Hugging Face, frozen, and never trained  
 
-The following task-specific folders contain fine-tuned checkpoints and results:
 
-- `cola_bert/`, `cola_distilbert/`
-- `mnli_bert/`, `mnli_distilbert/`
-- `mrpc_bert/`
-- `imdb_bert/`, `imdb_distilbert/`
 
-Each folder corresponds to:
-- A single downstream task
-- A specific model (BERT-base or DistilBERT-style student)
-- Standard fine-tuning configuration (3 epochs, fixed learning rate)
-
----
-
-## 7. Evaluation and Metrics
-
-- GLUE tasks evaluated using official metrics (Accuracy, F1, Matthews Corr.)
-- IMDb evaluated using classification accuracy
-- Comparisons focus on **relative trends**, not absolute performance
-- Single-seed experiments are used for consistency
-
----
-
-## 8. Relationship to the Original Paper
-
-The original DistilBERT paper reports a full-scale ablation study during pre-training (Table 4).
-
-This project:
-- Does **not** reproduce full-scale pre-training ablations
-- Implements a **computationally feasible proxy**
-- Validates the **directional trends** reported in the paper
-- Clearly distinguishes reproduced results from paper-reported results
-
----
-
-## 9. Key Takeaway
-
-These ablation experiments demonstrate that:
-- Knowledge distillation losses significantly influence student performance
-- Teacher-based initialization is critical for effective compression
-- Lightweight proxy experiments can still provide meaningful insights into model behavior
-
----
-
-## References
-
-Wolf, T., et al. (2020).  
-**Transformers: State-of-the-Art Natural Language Processing**.  
-EMNLP System Demonstrations.
-
-Sanh, V., et al. (2019).  
-**DistilBERT: a distilled version of BERT**.
