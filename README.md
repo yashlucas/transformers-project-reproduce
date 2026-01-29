@@ -121,6 +121,22 @@ layers.
 
 ---
 
+
+## 📚 Additional Documentation
+
+-  **Repository Structure & File Guide**  
+  See [REPO_STRUCTURE.md](./REPO_STRUCTURE.md) for a detailed explanation of:
+  - Project layout
+  - Training and evaluation scripts
+  - Ablation-related files
+
+-  **Ablation & Distillation Experiments**  
+  See the ablation scripts and documentation for:
+  - `mini_distil_pretrain.py`
+  - `ablation_study.py`
+  - `glue_tasks_all_abls.py`
+
+---
 ##  References
 
 ### DistilBERT Paper
