@@ -122,13 +122,17 @@ layers.
 ---
 
 
-## 📚 Additional Documentation
+##  Additional Documentation
 
 -  **Repository Structure & File Guide**  
   See [REPO_STRUCTURE.md](./REPO_STRUCTURE.md) for a detailed explanation of:
   - Project layout
   - Training and evaluation scripts
   - Ablation-related files
+
+- -  **Steps For Reproducibility**  
+  See [REPO_STRUCTURE.md](./STEPS_FOR_REPRODUCE.md) for a detailed explanation of:
+
 
 -  **Ablation & Distillation Experiments**  
   See the ablation scripts and documentation for:
