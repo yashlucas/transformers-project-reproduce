@@ -33,7 +33,8 @@ pretrained checkpoints and used for reproducing the paper’s main results.
 
 - **cola_bert/** – BERT-base fine-tuned on CoLA  
 - **cola_distilbert/** – DistilBERT fine-tuned on CoLA  
-- **mnli_bert/** – BERT-base fine-tuned on MNLI  
+- **mnli_bert/** – BERT-base fine-tuned on MNLI
+- ......
 - **mnli_distilbert/** – DistilBERT fine-tuned on MNLI  
 - **mrpc_bert/** – BERT-base fine-tuned on MRPC  
 - **imdb_bert/** – BERT-base fine-tuned on IMDb  
