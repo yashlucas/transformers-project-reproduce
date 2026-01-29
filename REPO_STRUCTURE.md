@@ -24,14 +24,6 @@ This approach allows us to study the **relative importance of different loss com
 
 ## 2. Models Used in Ablation
 
-### Teacher Model
-- **BERT-base (bert-base-uncased)**
-- 12 Transformer layers
-- ~110M parameters
-- Used in evaluation mode only
-- Provides:
-  - Soft logits (for distillation loss)
-  - Hidden states (for cosine embedding loss)
 
 ### Student Model
 - **BERT-style Masked Language Model**
