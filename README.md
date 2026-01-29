@@ -65,8 +65,8 @@ This repository evaluates whether these claims are **reproducible in practice**.
 | Model | Parameters (Millions) |
 |------|------------------------|
 | ELMo (paper baseline) | 180 |
-| BERT-base | 108.31 |
-| DistilBERT | 65.78 |
+| BERT-base | 1506.50 S |
+| DistilBERT | 659 S |
 
  **DistilBERT achieves a ~39% parameter reduction**, closely matching the paper’s reported 40%.
 
